@@ -3,7 +3,7 @@ variables:
 
 stages:
    - build
-   - build-docker
+   - build_image
    - release
    - deploy
 

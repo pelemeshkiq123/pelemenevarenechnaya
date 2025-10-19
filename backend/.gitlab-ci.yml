@@ -4,7 +4,6 @@ variables:
 stages:
    - build
    - release
-   - deploy
 
 build-code-job:
   stage: build
@@ -44,4 +43,3 @@ release:
     changes:
       - backend/**/*
 
-deploy:

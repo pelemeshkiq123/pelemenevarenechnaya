@@ -68,7 +68,6 @@ deploy-frontend:
   image: bitnami/kubectl:latest
   before_script:
     - |
-      # Создаем kubeconfig вручную
       kubectl config set-cluster k8smomok8s \
         --server=https://158.160.204.226 \
         --insecure-skip-tls-verify=true

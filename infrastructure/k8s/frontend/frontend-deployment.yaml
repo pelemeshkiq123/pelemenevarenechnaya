@@ -1,9 +1,8 @@
-apiVersion: apps/v1
+aapiVersion: apps/v1
 kind: Deployment
 metadata:
   name: momo-frontend
-  labels:
-    app: momo-frontend
+  namespace: default
 spec:
   replicas: 2
   selector:

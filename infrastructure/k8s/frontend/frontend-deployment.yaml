@@ -20,4 +20,6 @@ spec:
         - containerPort: 80
         env:
         - name: VUE_APP_API_URL
-          value: "http://momo-backend-service:8080"
+          value: "http://localhost:8081"
+      imagePullSecrets:
+      - name: gitlab-registry

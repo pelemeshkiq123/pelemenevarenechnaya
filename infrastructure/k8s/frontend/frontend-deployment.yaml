@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: momo-frontend
+  labels:
+    app: momo-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: momo-frontend
+  template:
+    metadata:
+      labels:
+        app: momo-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: gitlab.praktikum-services.ru:5050/std-int-005-013/varenikilife/momo-frontend:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: VUE_APP_API_URL
+          value: "http://momo-backend-service:8080"

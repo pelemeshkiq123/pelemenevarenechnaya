@@ -5,6 +5,7 @@ stages:
    - build
    - docker-build
    - release
+   - deploy-backend
 
 build-code-job:
   stage: build
@@ -65,7 +66,7 @@ build-docker-image:
   only:
     changes:
       - backend/**/*
-      
+
 release:
   stage: release
   variables:
@@ -84,3 +85,29 @@ release:
   only:
     changes:
       - backend/**/*
+
+deploy-backend:
+  stage: deploy-backend
+  image: 
+    name: bitnami/kubectl:latest
+    entrypoint: [""]
+  before_script:
+    - |
+      mkdir -p ~/.kube
+      echo "$KUBE_CONFIG" > ~/.kube/config
+      kubectl cluster-info
+  script:
+    - |
+      echo "Deploying Backend..."
+      # Заменяем переменную в манифесте
+      sed "s/\${CI_PIPELINE_ID}/${CI_PIPELINE_ID}/g" k8s/backend/deployment.yaml | kubectl apply -f -
+      kubectl apply -f infrastructure/k8s/backend/service.yaml
+      
+      # Ждем готовности бэкенда
+      kubectl rollout status deployment/momo-backend --timeout=300s
+      
+      echo "Backend deployed successfully!"
+  dependencies:
+    - release  # Зависит от тегирования образа
+  environment:
+    name: production

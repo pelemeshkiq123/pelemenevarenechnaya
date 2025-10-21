@@ -42,24 +42,41 @@ release:
     changes:
       - frontend/**/*
 
+# deploy-frontend:
+#   stage: deploy-frontend
+#   image: 
+#     name: bitnami/kubectl:latest
+#     entrypoint: [""]
+#   before_script:
+#     - |
+#       mkdir -p ~/.kube
+#       echo "$KUBE_CONFIG" > ~/.kube/config
+#   script:
+#     - |
+#       echo "Deploying Frontend..."
+#       kubectl apply -f k8s/frontend/deployment.yaml
+#       kubectl apply -f k8s/frontend/service.yaml
+      
+#       # Ждем готовности фронтенда
+#       kubectl rollout status deployment/momo-frontend --timeout=300s
+      
+#       echo "Frontend deployed successfully!"
+#   environment:
+#     name: production
 deploy-frontend:
   stage: deploy-frontend
   image: 
-    name: bitnami/kubectl:latest
+    name: yandex/yc:latest
     entrypoint: [""]
   before_script:
     - |
-      mkdir -p ~/.kube
-      echo "$KUBE_CONFIG" > ~/.kube/config
+      # Устанавливаем токен для YC CLI
+      echo "$YC_SERVICE_ACCOUNT_KEY" > key.json
+      yc config set service-account-key key.json
+      
+      # Получаем kubeconfig автоматически
+      yc container cluster get-credentials momo-k8s --external
   script:
     - |
-      echo "Deploying Frontend..."
-      kubectl apply -f k8s/frontend/deployment.yaml
-      kubectl apply -f k8s/frontend/service.yaml
-      
-      # Ждем готовности фронтенда
-      kubectl rollout status deployment/momo-frontend --timeout=300s
-      
-      echo "Frontend deployed successfully!"
-  environment:
-    name: production
+      kubectl get nodes
+      kubectl apply -f infrastructure/k8s/frontend/

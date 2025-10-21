@@ -88,26 +88,23 @@ release:
 
 deploy-backend:
   stage: deploy-backend
-  image: 
-    name: bitnami/kubectl:latest
-    entrypoint: [""]
+  image: bitnami/kubectl:latest
   before_script:
     - |
-      mkdir -p ~/.kube
-      echo "$KUBE_CONFIG" > ~/.kube/config
-      kubectl cluster-info
+      kubectl config set-cluster k8smomok8s \
+        --server=https://158.160.204.226 \
+        --insecure-skip-tls-verify=true
+      
+      kubectl config set-credentials gitlab-ci-user \
+        --token="$KUBE_TOKEN"
+      
+      kubectl config set-context production \
+        --cluster=k8smomok8s \
+        --user=gitlab-ci-user
+      
+      kubectl config use-context production
   script:
     - |
-      echo "Deploying Backend..."
-      # Заменяем переменную в манифесте
-      sed "s/\${CI_PIPELINE_ID}/${CI_PIPELINE_ID}/g" k8s/backend/deployment.yaml | kubectl apply -f -
-      kubectl apply -f infrastructure/k8s/backend/service.yaml
-      
-      # Ждем готовности бэкенда
+      kubectl get nodes
+      kubectl apply -f infrastructure/k8s/backend/
       kubectl rollout status deployment/momo-backend --timeout=300s
-      
-      echo "Backend deployed successfully!"
-  dependencies:
-    - release  # Зависит от тегирования образа
-  environment:
-    name: production

@@ -59,7 +59,6 @@ release:
       
 #       # Ждем готовности фронтенда
 #       kubectl rollout status deployment/momo-frontend --timeout=300s
-      
 #       echo "Frontend deployed successfully!"
 #   environment:
 #     name: production

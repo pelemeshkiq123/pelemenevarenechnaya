@@ -17,6 +17,14 @@ spec:
       containers:
       - name: backend
         image: gitlab.praktikum-services.ru:5050/std-int-005-013/varenikilife/momo-backend:1.0.${CI_PIPELINE_ID}
+        imagePullPolicy: IfNotPresent
+        resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
         ports:
         - containerPort: 8080
         env:

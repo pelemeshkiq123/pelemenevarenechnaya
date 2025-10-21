@@ -64,6 +64,8 @@ build-docker-image:
         --verbosity=info
   only:
     changes:
+      - backend/**/*
+      
 release:
   stage: release
   variables:

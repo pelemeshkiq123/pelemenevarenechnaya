@@ -3,6 +3,7 @@ variables:
 
 stages:
    - build
+   - .pre
    - release
 
 build-code-job:
@@ -26,6 +27,17 @@ build-code-job:
   artifacts:
     paths:
       - momo-store-${VERSION}/api
+
+
+debug:
+  stage: .pre
+  script: |
+    - echo "CI_REGISTRY: $CI_REGISTRY"
+    - echo "CI_REGISTRY_IMAGE: $CI_REGISTRY_IMAGE"
+    - echo "CI_PROJECT_PATH: $CI_PROJECT_PATH"
+    - echo "CI_COMMIT_SHORT_SHA: $CI_COMMIT_SHORT_SHA"
+    - echo "Full image path: $CI_REGISTRY_IMAGE/momo-backend:$CI_COMMIT_SHORT_SHA"
+
 
 release:
   stage: release

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: gitlab.praktikum-services.ru:5050/std-int-005-013/varenikilife/momo-backend:1.0.${CI_PIPELINE_ID}
+        image: gitlab.praktikum-services.ru:5050/std-int-005-013/varenikilife/momo-backend:latest
         imagePullPolicy: IfNotPresent
         resources:
             requests:

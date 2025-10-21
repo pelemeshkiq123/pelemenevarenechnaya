@@ -83,4 +83,5 @@ deploy-frontend:
     - |
       kubectl get nodes
       kubectl apply -f infrastructure/k8s/frontend/
+      kubectl apply -f infrastructure/k8s/ingress.yaml
       kubectl rollout status deployment/momo-frontend --timeout=300s

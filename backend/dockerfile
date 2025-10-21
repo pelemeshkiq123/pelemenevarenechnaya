@@ -1,4 +1,7 @@
-FROM alpine/curl:3.14
-COPY api /bin/api
-EXPOSE 8081
-ENTRYPOINT ["/bin/api"]
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates
+WORKDIR /app
+COPY momo-store-*/api /app/api
+RUN chmod +x /app/api
+EXPOSE 8080
+CMD ["/app/api"]

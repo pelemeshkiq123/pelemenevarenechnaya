@@ -77,7 +77,7 @@ deploy-frontend:
         --token="$KUBE_TOKEN"
       
       kubectl config set-context production \
-        --cluster=gitlab-ci-user \
+        --cluster=k8smomok8s \
         --user=gitlab-ci-user
       
       kubectl config use-context production

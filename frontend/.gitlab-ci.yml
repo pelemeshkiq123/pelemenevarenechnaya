@@ -61,7 +61,5 @@ deploy-frontend:
       kubectl rollout status deployment/momo-frontend --timeout=300s
       
       echo "Frontend deployed successfully!"
-  dependencies:
-    - deploy-backend  # Сначала должен быть развернут бэкенд
   environment:
     name: production

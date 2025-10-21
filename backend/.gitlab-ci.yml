@@ -37,9 +37,7 @@ build-docker-image:
   dependencies:
     - build-code-job
   before_script: | 
-
-      echo: "${CI_PROJECT_DIR}\backend\Dockerfile"
-  
+      echo "${CI_PROJECT_DIR}\backend\Dockerfile"
   script:
     - |
       /kaniko/executor \

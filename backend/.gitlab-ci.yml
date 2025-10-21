@@ -3,7 +3,7 @@ variables:
 
 stages:
    - build
-   - .pre
+   - docker-build
    - release
 
 build-code-job:
@@ -28,16 +28,36 @@ build-code-job:
     paths:
       - momo-store-${VERSION}/api
 
-
-debug:
-  stage: .pre
-  script: |
-     echo "CI_REGISTRY: $CI_REGISTRY"
-     echo "CI_REGISTRY_IMAGE: $CI_REGISTRY_IMAGE"
-     echo "CI_PROJECT_PATH: $CI_PROJECT_PATH"
-     echo "CI_COMMIT_SHORT_SHA: $CI_COMMIT_SHORT_SHA"
-     echo "Full image path: $CI_REGISTRY_IMAGE/momo-backend:$CI_COMMIT_SHORT_SHA"
-
+# НОВАЯ JOB: Сборка Docker-образа
+build-docker-image:
+  stage: docker-build
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+  dependencies:
+    - build-code-job
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - |
+      cat > Dockerfile << 'EOF'
+      FROM alpine:latest
+      WORKDIR /app
+      COPY momo-store-${VERSION}/api /app/
+      EXPOSE 8080
+      CMD ["/app/api"]
+      EOF
+    - docker build -t $CI_REGISTRY_IMAGE/momo-backend:$CI_COMMIT_SHORT_SHA .
+    - docker push $CI_REGISTRY_IMAGE/momo-backend:$CI_COMMIT_SHORT_SHA
+    - echo "Docker image pushed: $CI_REGISTRY_IMAGE/momo-backend:$CI_COMMIT_SHORT_SHA"
+  artifacts:
+    reports:
+      dotenv: build.env
+  only:
+    changes:
+      - backend/**/*
 
 release:
   stage: release
@@ -47,11 +67,13 @@ release:
     name: gcr.io/go-containerregistry/crane:debug
     entrypoint: [ "" ]
   cache: [ ]
+  dependencies:
+    - build-docker-image  # Важно: зависимость от сборки образа
   before_script:
     - crane auth login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - crane tag $CI_REGISTRY_IMAGE/momo-backend:$CI_COMMIT_SHORT_SHA $VERSION
+    - echo "Successfully tagged $CI_REGISTRY_IMAGE/momo-backend:$VERSION"
   only:
     changes:
       - backend/**/*
-

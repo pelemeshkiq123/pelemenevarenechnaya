@@ -65,18 +65,24 @@ release:
 #     name: production
 deploy-frontend:
   stage: deploy-frontend
-  image: 
-    name: 2alab/yandexcloud-yc
-    entrypoint: [""]
+  image: bitnami/kubectl:latest
   before_script:
     - |
-      # Устанавливаем токен для YC CLI
-      echo "$YC_SERVICE_ACCOUNT_KEY" > key.json
-      yc config set service-account-key key.json
+      # Создаем kubeconfig вручную
+      kubectl config set-cluster k8smomok8s \
+        --server=https://158.160.204.226 \
+        --insecure-skip-tls-verify=true
       
-      # Получаем kubeconfig автоматически
-      yc container cluster get-credentials momo-k8s --external
+      kubectl config set-credentials gitlab-ci-user \
+        --token="$KUBE_TOKEN"
+      
+      kubectl config set-context production \
+        --cluster=gitlab-ci-user \
+        --user=gitlab-ci-user
+      
+      kubectl config use-context production
   script:
     - |
       kubectl get nodes
       kubectl apply -f infrastructure/k8s/frontend/
+      kubectl rollout status deployment/momo-frontend --timeout=300s

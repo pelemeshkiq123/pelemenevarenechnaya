@@ -31,19 +31,20 @@ build-code-job:
 # НОВАЯ JOB: Сборка Docker-образа
 build-docker-image:
   stage: docker-build
-  image: docker:latest
-  services:
-    - docker:dind
-  variables:
-    DOCKER_TLS_CERTDIR: "/certs"
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
   dependencies:
     - build-code-job
-  before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  script: | 
-     docker build -t $CI_REGISTRY_IMAGE/momo-backend:$CI_COMMIT_SHORT_SHA -f Dockerfile .
-     docker push $CI_REGISTRY_IMAGE/momo-backend:$CI_COMMIT_SHORT_SHA
-     echo "Docker image pushed: $CI_REGISTRY_IMAGE/momo-backend:$CI_COMMIT_SHORT_SHA"
+  script:
+    - |
+      /kaniko/executor \
+        --context "${CI_PROJECT_DIR}" \
+        --dockerfile "${CI_PROJECT_DIR}/Dockerfile" \
+        --destination "${CI_REGISTRY_IMAGE}/momo-backend:${CI_COMMIT_SHORT_SHA}" \
+        --destination "${CI_REGISTRY_IMAGE}/momo-backend:${VERSION}" \
+        --cache=true
+    - echo "Docker image built and pushed successfully"
   only:
     changes:
       - backend/**/*

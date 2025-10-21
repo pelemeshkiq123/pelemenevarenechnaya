@@ -36,7 +36,8 @@ build-docker-image:
     entrypoint: [""]
   dependencies:
     - build-code-job
-  before_script:
+  before_script: | 
+
       echo: "${CI_PROJECT_DIR}\backend\Dockerfile"
   
   script:

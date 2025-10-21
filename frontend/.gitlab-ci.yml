@@ -14,7 +14,6 @@ build:
    image:
       name: gcr.io/kaniko-project/executor:v1.9.0-debug
       entrypoint: [""]
-   # переменные CI_REGISTRY_USER, CI_REGISTRY_PASSWORD, CI_REGISTRY генерятся Гитлабом, их задавать не надо
    script:
       - /kaniko/executor
          --context "${CI_PROJECT_DIR}/frontend"
@@ -36,8 +35,8 @@ release:
   cache: [ ]
   script:
     - crane auth login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - crane tag $CI_REGISTRY_IMAGE/sausage-frontend:$CI_COMMIT_SHA $VERSION  
-    - crane tag $CI_REGISTRY_IMAGE/sausage-frontend:$CI_COMMIT_SHA latest 
+    - crane tag $CI_REGISTRY_IMAGE/momo-frontend:$CI_COMMIT_SHA $VERSION  
+    - crane tag $CI_REGISTRY_IMAGE/momo-frontend:$CI_COMMIT_SHA latest 
   only:
     changes:
       - frontend/**/*

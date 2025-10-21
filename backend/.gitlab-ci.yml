@@ -36,13 +36,25 @@ build-docker-image:
     entrypoint: [""]
   dependencies:
     - build-code-job
-  before_script: | 
-      echo "${CI_PROJECT_DIR}/backend/Dockerfile"
+  before_script: |
+      echo "=== Creating Dockerfile ==="
+      cat > ./Dockerfile << 'EOF'
+      FROM alpine:latest
+      WORKDIR /app
+      COPY momo-store-1.0.${CI_PIPELINE_ID}/api /app/api
+      RUN chmod +x /app/api
+      EXPOSE 8080
+      CMD ["/app/api"]
+      EOF
+      
+      echo "Dockerfile content:"
+      cat ./Dockerfile
+      echo "File exists: $(test -f ./Dockerfile && echo 'YES' || echo 'NO')"
   script:
     - |
       /kaniko/executor \
         --context "${CI_PROJECT_DIR}" \
-        --dockerfile "${CI_PROJECT_DIR}/backend/Dockerfile" \
+        --dockerfile "${CI_PROJECT_DIR}/Dockerfile" \
         --destination "${CI_REGISTRY_IMAGE}/momo-backend:${CI_COMMIT_SHORT_SHA}" \
         --destination "${CI_REGISTRY_IMAGE}/momo-backend:${VERSION}" \
         --cache=true

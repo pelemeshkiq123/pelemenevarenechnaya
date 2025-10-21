@@ -70,8 +70,6 @@ deploy-frontend:
     entrypoint: [""]
   before_script:
     - |
-      # Устанавливаем yc CLI
-      apk add --no-cache curl
       curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
       source ~/.bashrc
 

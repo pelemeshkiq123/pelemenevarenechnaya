@@ -34,3 +34,5 @@ spec:
         configMap:
           name: nginx-config
           defaultMode: 0644
+      imagePullSecrets:
+      - name: gitlab-registry

@@ -31,3 +31,5 @@ spec:
         env:
         - name: ENVIRONMENT
           value: "production"
+      imagePullSecrets:
+      - name: gitlab-registry

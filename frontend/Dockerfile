@@ -6,8 +6,7 @@ RUN npm install
 COPY . .
 
 # Сборка с ПРАВИЛЬНЫМ API_URL для production
-ARG VUE_APP_API_URL=http://localhost:8081
-RUN VUE_APP_API_URL=${VUE_APP_API_URL} npm run build
+RUN VUE_APP_API_URL=http://localhost:8081 npm run build
 
 # Стадия production
 FROM nginx:stable-alpine

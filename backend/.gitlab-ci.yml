@@ -106,6 +106,6 @@ deploy-backend:
       kubectl config use-context production
   script:
     - |
-      kubectl get nodes -n default
+      kubectl get nodes
       kubectl apply -f infrastructure/k8s/backend/
       kubectl rollout status deployment/momo-backend --timeout=300s

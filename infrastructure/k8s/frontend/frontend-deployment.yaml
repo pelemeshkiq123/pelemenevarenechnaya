@@ -2,9 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: momo-frontend
-  namespace: default
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: momo-frontend
@@ -14,16 +13,21 @@ spec:
         app: momo-frontend
     spec:
       containers:
-      - name: momo-frontend
+      - name: frontend
         image: gitlab.praktikum-services.ru:5050/std-int-005-013/varenikilife/momo-frontend:latest
-        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d/default.conf
+          subPath: default.conf
         resources:
-            requests:
-              cpu: "200m"
-              memory: "256Mi"
-            limits:
-              cpu: "500m"
-              memory: "512Mi"
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "200m" 
+            memory: "256Mi"
       volumes:
       - name: nginx-config
         configMap:

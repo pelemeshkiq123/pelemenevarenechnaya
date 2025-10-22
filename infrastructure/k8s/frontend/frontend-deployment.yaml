@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: momo-frontend
-  namespace: default
 spec:
   replicas: 2
   selector:
@@ -24,10 +23,8 @@ spec:
             limits:
               cpu: "500m"
               memory: "512Mi"
-        ports:
-        - containerPort: 80
-        env:
-        - name: VUE_APP_API_URL
-          value: "http://localhost:8081"
-      imagePullSecrets:
-      - name: gitlab-registry
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+          defaultMode: 0644

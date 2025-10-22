@@ -16,7 +16,7 @@ spec:
         app: momo-backend
     spec:
       containers:
-      - name: backend
+      - name: momo-backend
         image: gitlab.praktikum-services.ru:5050/std-int-005-013/varenikilife/momo-backend:latest
         imagePullPolicy: IfNotPresent
         resources:

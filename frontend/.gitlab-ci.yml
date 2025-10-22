@@ -41,27 +41,7 @@ release:
   only:
     changes:
       - frontend/**/*
-
-# deploy-frontend:
-#   stage: deploy-frontend
-#   image: 
-#     name: bitnami/kubectl:latest
-#     entrypoint: [""]
-#   before_script:
-#     - |
-#       mkdir -p ~/.kube
-#       echo "$KUBE_CONFIG" > ~/.kube/config
-#   script:
-#     - |
-#       echo "Deploying Frontend..."
-#       kubectl apply -f k8s/frontend/deployment.yaml
-#       kubectl apply -f k8s/frontend/service.yaml
       
-#       # Ждем готовности фронтенда
-#       kubectl rollout status deployment/momo-frontend --timeout=300s
-#       echo "Frontend deployed successfully!"
-#   environment:
-#     name: production
 deploy-frontend:
   stage: deploy-frontend
   image: bitnami/kubectl:latest

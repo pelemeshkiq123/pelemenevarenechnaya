@@ -27,7 +27,7 @@ spec:
               cpu: "500m"
               memory: "512Mi"
         ports:
-        - containerPort: 8080
+        - containerPort: 8081
         env:
         - name: ENVIRONMENT
           value: "production"

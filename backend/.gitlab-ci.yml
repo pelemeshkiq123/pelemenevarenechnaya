@@ -46,7 +46,7 @@ build-docker-image:
       WORKDIR /app
       COPY momo-store-*/api /app/api
       RUN chmod +x /app/api
-      EXPOSE 8080
+      EXPOSE 8081
       CMD ["/app/api"]
       EOF
             

@@ -30,9 +30,11 @@ spec:
             cpu: "200m" 
             memory: "256Mi"
       volumes:
-      - name: nginx-config
-        configMap:
-          name: nginx-config
-          defaultMode: 0644
+        - name: nginx-conf
+          configMap:
+            name: nginx-conf
+            items:
+              - key: nginx.conf
+                path: nginx.conf
       imagePullSecrets:
       - name: gitlab-registry

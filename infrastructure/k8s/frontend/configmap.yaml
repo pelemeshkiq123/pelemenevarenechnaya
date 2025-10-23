@@ -21,7 +21,7 @@ data:
       }
 
       location ~ ^/(categories|products|auth|metrics|orders)/ {
-        proxy_pass http://http://momo-backend-service:8081;
+        proxy_pass http://momo-backend-service:8081;
       }
 
       location /stub_status {

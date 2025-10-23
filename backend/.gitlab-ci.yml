@@ -108,5 +108,3 @@ deploy-backend:
     - |
       kubectl get nodes
       kubectl apply -f infrastructure/k8s/backend/
-      sleep 10
-      kubectl rollout status deployment/momo-backend --timeout=300s

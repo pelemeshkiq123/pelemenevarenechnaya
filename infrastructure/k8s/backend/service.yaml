@@ -4,7 +4,7 @@ metadata:
   name: momo-backend-service
   namespace: default
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: momo-backend
   ports:

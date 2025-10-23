@@ -1,14 +1,18 @@
-# k8s/ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: momo-ingress
-  namespace: default
   annotations:
     kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"  # для SSL
 spec:
+  tls:
+  - hosts:
+    - vareniki4ever.ru  # ← ваш домен
+    secretName: momo-tls-secret
   rules:
-  - http:
+  - host: vareniki4ever.ru  # ← ваш домен
+    http:
       paths:
       - path: /
         pathType: Prefix

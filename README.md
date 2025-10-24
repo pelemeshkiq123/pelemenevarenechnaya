@@ -19,13 +19,11 @@ Vue.js фронтенд и Go бэкенд приложение для инте�
 
 Версии образов формируются автоматически по шаблону:
 
-```
-1.0.${CI_PIPELINE_ID}
+```bash
+1.0.${CI_PIPELINE_ID}  # Пример: 1.0.7496502
 ```
 
-Пример: `1.0.7496502`
-
-Все образы хранятся в **GitLab Container Registry**:
+**Хранилище образов**: GitLab Container Registry
 - `gitlab.praktikum-services.ru:5050/std-int-005-013/varenikilife/momo-backend:1.0.7496502`
 - `gitlab.praktikum-services.ru:5050/std-int-005-013/varenikilife/momo-frontend:latest`
 
@@ -33,7 +31,7 @@ Vue.js фронтенд и Go бэкенд приложение для инте�
 
 ### Backend тестирование
 
-Для Go бэкенда настроен статический анализ через **SonarQube**:
+Настроен статический анализ через **SonarQube**:
 
 ```bash
 sonar-scanner \
@@ -43,9 +41,9 @@ sonar-scanner \
   -Dsonar.login="${SONAR_TOKEN}"
 ```
 
-Проверяются:
+**Проверяемые метрики:**
 - Code coverage
-- Code smells
+- Code smells  
 - Security vulnerabilities
 - Bugs
 - Technical debt
@@ -55,33 +53,38 @@ sonar-scanner \
 ### Автоматический деплой
 
 При мерже в ветку `main` автоматически происходит:
-1. Сборка новых образов
-2. Пуш в GitLab Registry
-3. Деплой в production Kubernetes кластер
+
+```
+Merge to main → Build Images → Push to Registry → Deploy to K8s → Update Ingress → SSL Certificate
+```
 
 ### Архитектура в k8s
 
-- **Frontend**: Vue.js SPA на nginx
-- **Backend**: Go API сервер
-- **Ingress**: nginx controller с SSL termination
-- **Services**: ClusterIP для внутренней коммуникации
+| Компонент | Технология | Назначение |
+|-----------|------------|------------|
+| **Frontend** | Vue.js + nginx | SPA приложение |
+| **Backend** | Go API | Бизнес-логика |
+| **Ingress** | nginx controller | Маршрутизация + SSL |
+| **Services** | ClusterIP | Внутренняя коммуникация |
 
 ### Сертификаты SSL
 
-HTTPS сертификаты автоматически управляются через **Yandex Cloud Certificate Manager**:
-- Домен: `пельменнососисочныйдомен.рф`
-- Автоматическое продление Let's Encrypt
-- TLS termination на ingress уровне
+HTTPS сертификаты управляются через **Yandex Cloud Certificate Manager**:
+
+- **Домен**: `пельменнососисочныйдомен.рф`
+- **Провайдер**: Let's Encrypt
+- **Продление**: Автоматическое
+- **Termination**: На ingress уровне
 
 ## Локальная разработка
 
-### Запуск бэкенда
+### Backend
 ```bash
 cd backend
 go run cmd/api/main.go
 ```
 
-### Запуск фронтенда
+### Frontend
 ```bash
 cd frontend
 npm run serve
@@ -89,40 +92,56 @@ npm run serve
 
 ### Docker сборка
 ```bash
+# Backend
 docker build -t momo-backend:latest -f backend/Dockerfile .
+
+# Frontend  
 docker build -t momo-frontend:latest -f frontend/Dockerfile .
 ```
 
 ## Production доступ
 
-- **URL**: https://пельменнососисочныйдомен.рф
-- **API**: https://пельменнососисочныйдомен.рф/api
+| Ресурс | URL |
+|--------|-----|
+| **Основной сайт** | https://пельменнососисочныйдомен.рф |
+| **API** | https://пельменнососисочныйдомен.рф/api |
 
 ## Структура проекта
 
 ```
-├── backend/          # Go бэкенд
-├── frontend/         # Vue.js фронтенд
-├── k8s/             # Kubernetes манифесты
-├── .gitlab-ci.yml   # CI/CD конфигурация
-└── README.md
+momo-store/
+├── backend/                 # Go бэкенд
+│   ├── cmd/api/            # Точка входа
+│   ├── pkg/                # Внутренние пакеты
+│   └── Dockerfile          # Docker образ
+├── frontend/               # Vue.js фронтенд
+│   ├── public_html/        # Статика
+│   └── Dockerfile          # Docker образ  
+├── k8s/                    # Kubernetes манифесты
+│   ├── backend/            # Backend ресурсы
+│   ├── frontend/           # Frontend ресурсы
+│   └── ingress.yaml        # Ingress конфигурация
+├── .gitlab-ci.yml          # CI/CD конфигурация
+└── README.md              # Документация
 ```
 
 ## Переменные окружения GitLab
 
-- `KUBE_CONFIG` - kubeconfig для доступа к кластеру
-- `SONAR_TOKEN` - токен для SonarQube
-- `CI_REGISTRY_USER` - логин для GitLab Registry
-- `CI_REGISTRY_PASSWORD` - пароль для GitLab Registry
+| Переменная | Назначение |
+|------------|-------------|
+| `KUBE_CONFIG` | kubeconfig для доступа к кластеру |
+| `SONAR_TOKEN` | токен для SonarQube |
+| `CI_REGISTRY_USER` | логин для GitLab Registry |
+| `CI_REGISTRY_PASSWORD` | пароль для GitLab Registry |
 
 ---
 
 **Статус**: Production  
-**Последний деплой**: ${CI_PIPELINE_CREATED_AT}
+**Последний деплой**: `${CI_PIPELINE_CREATED_AT}`
 
 ---
 
 *Разработано с ❤️ для любителей пельменей*
 ```
 
-Теперь все секции должны правильно отображаться в GitLab!
+Теперь без стикеров, чистый и профессиональный вид!

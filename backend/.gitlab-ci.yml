@@ -68,15 +68,19 @@ build-docker-image:
     changes:
       - backend/**/*
 
-sonar-test:
+sonarqube-backend-sast:
   stage: test
   image: sonarsource/sonar-scanner-cli:latest
+  variables:
+    GIT_DEPTH: "0"
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
   script:
-    - sonar-scanner \
-      -Dsonar.projectKey=std-int-005-013_varenikilife_AZoVXruJB0vRiJmVN070 \
-      -Dsonar.sources=. \
-      -Dsonar.host.url=https://sonarqube.praktikum-services.ru \
-      -Dsonar.login=5527df56c207dde9116f4fc18cef08a6fa1b99e4
+    - cd backend
+    - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.host.url=${SONAR_URL} -Dsonar.login=${SONAR_LOGIN} -Dsonar.projectKey=${BACKEND_KEY}
+  allow_failure: true
 
 release:
   stage: release

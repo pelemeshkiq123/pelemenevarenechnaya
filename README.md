@@ -1,3 +1,4 @@
+```markdown
 # Momo Store - Пельменная №2
 
 Vue.js фронтенд и Go бэкенд приложение для интернет-магазина пельменей, развернутое в Kubernetes кластере Yandex Cloud.
@@ -17,9 +18,10 @@ Vue.js фронтенд и Go бэкенд приложение для инте�
 ### Версионирование
 
 Версии образов формируются автоматически по шаблону:
-1.0.${CI_PIPELINE_ID}
 
-text
+```
+1.0.${CI_PIPELINE_ID}
+```
 
 Пример: `1.0.7496502`
 
@@ -39,81 +41,88 @@ sonar-scanner \
   -Dsonar.sources="." \
   -Dsonar.host.url="https://sonarqube.praktikum-services.ru" \
   -Dsonar.login="${SONAR_TOKEN}"
+```
+
 Проверяются:
+- Code coverage
+- Code smells
+- Security vulnerabilities
+- Bugs
+- Technical debt
 
-Code coverage
+## Kubernetes Deployment
 
-Code smells
+### Автоматический деплой
 
-Security vulnerabilities
+При мерже в ветку `main` автоматически происходит:
+1. Сборка новых образов
+2. Пуш в GitLab Registry
+3. Деплой в production Kubernetes кластер
 
-Bugs
+### Архитектура в k8s
 
-Technical debt
+- **Frontend**: Vue.js SPA на nginx
+- **Backend**: Go API сервер
+- **Ingress**: nginx controller с SSL termination
+- **Services**: ClusterIP для внутренней коммуникации
 
-Kubernetes Deployment
-Автоматический деплой
-При мерже в ветку main автоматически происходит:
+### Сертификаты SSL
 
-Сборка новых образов
+HTTPS сертификаты автоматически управляются через **Yandex Cloud Certificate Manager**:
+- Домен: `пельменнососисочныйдомен.рф`
+- Автоматическое продление Let's Encrypt
+- TLS termination на ingress уровне
 
-Пуш в GitLab Registry
+## Локальная разработка
 
-Деплой в production Kubernetes кластер
-
-Архитектура в k8s
-Frontend: Vue.js SPA на nginx
-
-Backend: Go API сервер
-
-Ingress: nginx controller с SSL termination
-
-Services: ClusterIP для внутренней коммуникации
-
-Сертификаты SSL
-HTTPS сертификаты автоматически управляются через Yandex Cloud Certificate Manager:
-
-Домен: пельменнососисочныйдомен.рф
-
-Автоматическое продление Let's Encrypt
-
-TLS termination на ingress уровне
-
-Локальная разработка
-Запуск бэкенда
-bash
+### Запуск бэкенда
+```bash
 cd backend
 go run cmd/api/main.go
-Запуск фронтенда
-bash
+```
+
+### Запуск фронтенда
+```bash
 cd frontend
 npm run serve
-Docker сборка
-bash
+```
+
+### Docker сборка
+```bash
 docker build -t momo-backend:latest -f backend/Dockerfile .
 docker build -t momo-frontend:latest -f frontend/Dockerfile .
-Production доступ
-URL: https://пельменнососисочныйдомен.рф
+```
 
-API: https://пельменнососисочныйдомен.рф/api
+## Production доступ
 
-Структура проекта
-text
+- **URL**: https://пельменнососисочныйдомен.рф
+- **API**: https://пельменнососисочныйдомен.рф/api
+
+## Структура проекта
+
+```
 ├── backend/          # Go бэкенд
 ├── frontend/         # Vue.js фронтенд
 ├── k8s/             # Kubernetes манифесты
 ├── .gitlab-ci.yml   # CI/CD конфигурация
 └── README.md
-Переменные окружения GitLab
-KUBE_CONFIG - kubeconfig для доступа к кластеру
+```
 
-SONAR_TOKEN - токен для SonarQube
+## Переменные окружения GitLab
 
-CI_REGISTRY_USER - логин для GitLab Registry
+- `KUBE_CONFIG` - kubeconfig для доступа к кластеру
+- `SONAR_TOKEN` - токен для SonarQube
+- `CI_REGISTRY_USER` - логин для GitLab Registry
+- `CI_REGISTRY_PASSWORD` - пароль для GitLab Registry
 
-CI_REGISTRY_PASSWORD - пароль для GitLab Registry
+---
 
-Статус: Production
-Последний деплой: ${CI_PIPELINE_CREATED_AT}
+**Статус**: Production  
+**Последний деплой**: ${CI_PIPELINE_CREATED_AT}
 
-Разработано с ❤️ для любителей пельменей
+---
+
+*Разработано с ❤️ для любителей пельменей*
+```
+
+Теперь все секции должны правильно отображаться в GitLab!

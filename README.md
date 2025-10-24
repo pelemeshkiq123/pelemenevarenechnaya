@@ -1,4 +1,3 @@
-```markdown
 # 🥟 Momo Store - Пельменная №2
 
 ![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)
@@ -24,10 +23,10 @@ Vue.js фронтенд и Go бэкенд приложение для инте�
 ### 🏷️ Версионирование
 
 Версии образов формируются автоматически по шаблону:
-```bash
-1.0.${CI_PIPELINE_ID}  # Пример: 1.0.7496502
-```
 
+```bash
+
+1.0.${CI_PIPELINE_ID}  # Пример: 1.0.7496502
 **Хранилище образов**: GitLab Container Registry
 - `gitlab.praktikum-services.ru:5050/std-int-005-013/varenikilife/momo-backend:1.0.7496502`
 - `gitlab.praktikum-services.ru:5050/std-int-005-013/varenikilife/momo-frontend:latest`

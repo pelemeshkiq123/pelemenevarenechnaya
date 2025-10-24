@@ -4,6 +4,7 @@ variables:
 stages:
    - build
    - docker-build
+   - test
    - release
    - deploy-backend
 
@@ -66,6 +67,16 @@ build-docker-image:
   only:
     changes:
       - backend/**/*
+
+sonar-test:
+  stage: test
+  image: sonarsource/sonar-scanner-cli:latest
+  script:
+    - sonar-scanner \
+      -Dsonar.projectKey=std-int-005-013_varenikilife_AZoVXruJB0vRiJmVN070 \
+      -Dsonar.sources=. \
+      -Dsonar.host.url=https://sonarqube.praktikum-services.ru \
+      -Dsonar.login=5527df56c207dde9116f4fc18cef08a6fa1b99e4
 
 release:
   stage: release

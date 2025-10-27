@@ -34,9 +34,9 @@ Vue.js фронтенд и Go бэкенд приложение для инте�
 
 ```bash
 sonar-scanner \
-  -Dsonar.projectKey="std-int-005-013_varenikilife_AZoVXruJB0vRiJmVN070" \
+  -Dsonar.projectKey="${SONAR_KEY}" \
   -Dsonar.sources="." \
-  -Dsonar.host.url="https://sonarqube.praktikum-services.ru" \
+  -Dsonar.host.url="${SONAR_URL}" \
   -Dsonar.login="${SONAR_TOKEN}"
 ```
 
